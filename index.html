@@ -1219,18 +1219,21 @@
       const isAndroid = /Android/i.test(ua);
       const isIOS = /iPhone|iPad|iPod/i.test(ua);
 
+      const hintEl = document.getElementById('upiHint');
       if(isAndroid){
         // intent:// makes Android show the "Open with" chooser (GPay / PhonePe / Paytm...)
         window.location.href = intentLink;
+        setTimeout(()=>{ hintEl.style.display = 'block'; }, 1200);
       } else if(isIOS){
-        // iOS: upi:// opens the installed UPI app
+        // iOS has no app chooser — try opening a UPI app, but scanning the QR is most reliable
+        hintEl.innerHTML = 'On iPhone the best way is to open GPay / PhonePe / Paytm yourself and <b>scan the QR code above</b> to pay ' + rupee(total) + ', then tap "I\'ve completed the payment" below.';
+        hintEl.style.display = 'block';
         window.location.href = upiLink;
       } else {
         // Desktop/laptop: no UPI app — guide them to scan the QR instead
         window.location.href = upiLink;
+        setTimeout(()=>{ hintEl.style.display = 'block'; }, 1200);
       }
-      // Show the fallback hint shortly after, in case nothing opened
-      setTimeout(()=>{ document.getElementById('upiHint').style.display = 'block'; }, 1200);
     });
 
     // ---------- SCREEN 2: CONFIRMED (after "I've paid") ----------
