@@ -85,13 +85,14 @@
   }
   .nav{
     display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px; max-width:1180px; margin:0 auto;
+    padding:8px 28px; max-width:1180px; margin:0 auto;
   }
   .logo{
     font-family:'Fraunces',serif; font-weight:600; font-size:24px;
     display:flex; align-items:center; gap:8px; text-decoration:none;
   }
   .logo .drop{width:10px;height:13px;border-radius:50% 50% 50% 0;background:var(--aqua);transform:rotate(45deg);display:inline-block;}
+  .logo .logo-img{height:76px; width:auto; display:block;}
   .navlinks{display:flex; gap:34px; list-style:none; margin:0; padding:0;}
   .navlinks a{text-decoration:none; font-size:14.5px; font-weight:500; color:var(--ink-soft); transition:color .15s;}
   .navlinks a:hover{color:var(--aqua-deep);}
@@ -146,6 +147,14 @@
   .hero-cta{display:flex; gap:14px; align-items:center; flex-wrap:wrap;}
   .price-tag{font-family:'JetBrains Mono',monospace; font-size:15px; color:var(--muted);}
   .price-tag b{color:var(--ink); font-size:20px;}
+  .perk-row{display:flex; flex-wrap:wrap; gap:10px; margin-top:22px;}
+  .perk{
+    display:inline-flex; align-items:center; gap:7px;
+    font-size:12.5px; font-weight:600; color:var(--aqua-deep);
+    background:rgba(47,156,147,0.12); border:1px solid rgba(47,156,147,0.28);
+    padding:8px 14px; border-radius:100px;
+  }
+  .perk svg{width:14px; height:14px; flex:none;}
   .trust-row{
     display:flex; gap:26px; margin-top:44px; padding-top:26px; border-top:1px solid var(--line); flex-wrap:wrap;
   }
@@ -492,7 +501,8 @@
   }
   @media (max-width: 480px){
     .wrap{padding:0 18px;}
-    .nav{padding:14px 18px;}
+    .nav{padding:6px 18px;}
+    .logo .logo-img{height:58px;}
     .navright{gap:8px;}
     .hero{padding-top:56px;}
     .hero-grid{padding:0 18px; gap:28px;}
@@ -525,16 +535,16 @@
 
 <div class="announce" role="status" aria-label="Announcements">
   <div class="marquee" aria-hidden="true">
-    <span><b>Free delivery across Bangalore</b><span class="dot">•</span> Pay via UPI <span class="dot">•</span> Ships in 24–48 hrs</span>
+    <span><b>Free delivery across Bangalore</b><span class="dot">•</span> No GST, no delivery charges <span class="dot">•</span> Pay via UPI</span>
     <span><b>5 herbs, 0% chemicals</b><span class="dot">•</span> Boiled fresh, no preservatives <span class="dot">•</span> ₹150 / 100ml</span>
-    <span><b>Free delivery across Bangalore</b><span class="dot">•</span> Pay via UPI <span class="dot">•</span> Ships in 24–48 hrs</span>
+    <span><b>Free delivery across Bangalore</b><span class="dot">•</span> No GST, no delivery charges <span class="dot">•</span> Pay via UPI</span>
     <span><b>5 herbs, 0% chemicals</b><span class="dot">•</span> Boiled fresh, no preservatives <span class="dot">•</span> ₹150 / 100ml</span>
   </div>
 </div>
 
 <header class="site">
   <div class="nav">
-    <a href="#top" class="logo"><span class="drop"></span>Jad Se</a>
+    <a href="#top" class="logo"><img src="logo.png" alt="Jad Se" class="logo-img"></a>
     <ul class="navlinks">
       <li><a href="#product">Product</a></li>
       <li><a href="#why">Why water?</a></li>
@@ -564,6 +574,20 @@
         <div class="hero-cta">
           <a href="#product" class="btn btn-dark">Shop the spray</a>
           <span class="price-tag">From <b>₹150</b> · 100ml</span>
+        </div>
+        <div class="perk-row">
+          <span class="perk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            Free delivery in Bangalore
+          </span>
+          <span class="perk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            No GST added
+          </span>
+          <span class="perk">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>
+            No delivery charges
+          </span>
         </div>
         <div class="trust-row">
           <div class="trust-item"><b>560xxx</b>Bangalore pincodes only</div>
@@ -672,7 +696,7 @@
             <span class="was">₹600</span>
             <span class="off">75% OFF</span>
           </div>
-          <div class="gst-note">Inclusive of all taxes · Free delivery in Bangalore</div>
+          <div class="gst-note">No GST · No delivery charges · Free delivery across Bangalore</div>
           <div class="gst-note" style="margin-top:-18px; color:var(--coral-deep);">⚠ Preservative-free — refrigerate and use within 1 week of opening.</div>
 
           <div class="qty-row">
@@ -883,6 +907,7 @@
   <div class="drawer-body" id="drawerBody"></div>
   <div class="drawer-foot" id="drawerFoot" style="display:none;">
     <div class="row">Subtotal <b id="cartSubtotal">₹0</b></div>
+    <div style="font-size:12.5px; color:var(--aqua-deep); font-weight:600; margin:-6px 0 14px;">✓ No GST · No delivery charges · Free delivery in Bangalore</div>
     <button class="btn btn-primary btn-block" id="checkoutBtn">Checkout</button>
   </div>
 </div>
@@ -894,7 +919,7 @@
     <div id="modalContent">
       <div class="modal-head">
         <h3>Delivery details</h3>
-        <p>We currently deliver only within Bangalore. Payment is online via UPI.</p>
+        <p>We currently deliver only within Bangalore. Payment is online via UPI. <b style="color:var(--aqua-deep);">No GST, no delivery charges — the price you see is the price you pay.</b></p>
       </div>
       <div class="modal-body">
         <form id="checkoutForm" novalidate>
@@ -925,7 +950,7 @@
               <div class="err">We only deliver to Bangalore pincodes (560xxx).</div>
             </div>
           </div>
-          <div class="pay-note">📱 <b>Pay via UPI</b> — after placing the order you'll get a UPI payment button and our UPI ID to pay via GPay, PhonePe, Paytm or any UPI app.</div>
+          <div class="pay-note">📱 <b>Pay via UPI</b> — on the next step you'll get a QR code to pay via GPay, PhonePe, Paytm or any UPI app. Your order is confirmed once you pay. No GST, no delivery charges.</div>
           <button type="submit" class="btn btn-primary btn-block">Continue to payment — <span id="modalTotal">₹150</span></button>
         </form>
       </div>
@@ -937,7 +962,7 @@
 (function(){
   // ---------------- Data ----------------
   const PRODUCT = { id: 'jadse-100ml', name: 'Jad Se Hair Water', size: '100ml', price: 150 };
-  const WHATSAPP_NUMBER = '919876543210'; // TODO: replace with the seller's real WhatsApp number
+  const WHATSAPP_NUMBER = '919137405822'; // seller's WhatsApp number (India +91)
 
   let cart = {}; // { productId: qty }
   let heroQty = 1;
@@ -1129,52 +1154,55 @@
     const UPI_ID = 'ravindranagarkoti894-1@oksbi'; // your UPI ID
     const upiNote = encodeURIComponent(`Jad Se order ${orderId}`);
     const upiLink = `upi://pay?pa=${UPI_ID}&pn=Jad%20Se%20Hair%20Water&am=${total}&cu=INR&tn=${upiNote}`;
-    const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(upiLink)}`;
+    const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(upiLink)}`;
 
+    // Full order details sent to the SELLER's WhatsApp so you get everything you need to dispatch.
     const waMessage = encodeURIComponent(
-      `New order from Jad Se website\n` +
+      `🌿 NEW ORDER — Jad Se Hair Water\n` +
+      `------------------------------\n` +
       `Order ID: ${orderId}\n` +
-      `Product: ${PRODUCT.name} (${PRODUCT.size}) x${qty}\n` +
-      `Total: ${rupee(total)} (Paid via UPI — screenshot attached)\n\n` +
-      `Name: ${name}\nPhone: ${phone}\nAddress: ${address}, ${area}, Bangalore - ${pincode}`
+      `Product: ${PRODUCT.name} (${PRODUCT.size})\n` +
+      `Quantity: ${qty} bottle(s)\n` +
+      `Amount paid: ${rupee(total)} (via UPI)\n` +
+      `------------------------------\n` +
+      `Customer: ${name}\n` +
+      `Phone: ${phone}\n` +
+      `Deliver to: ${address}, ${area}, Bangalore - ${pincode}`
     );
     const waLink = `https://wa.me/${WHATSAPP_NUMBER}?text=${waMessage}`;
 
+    // ---------- SCREEN 1: PAY ----------
     modalContent.innerHTML = `
-      <div class="success-screen">
-        <div class="tick">✓</div>
-        <h3>Order placed — now pay</h3>
-        <div class="order-id">${orderId}</div>
+      <div class="success-screen" style="text-align:left; padding:28px 28px 26px;">
+        <h3 style="text-align:center;">Pay ${rupee(total)} to place your order</h3>
+        <p style="text-align:center; color:var(--muted); font-size:13px; margin-top:8px;">Order ID <b class="mono">${orderId}</b> · Your order is confirmed only after payment.</p>
 
-        <div style="margin-top:24px; text-align:left; border:1px solid var(--line); background:var(--mist);">
-          <div style="padding:14px 16px; border-bottom:1px solid var(--line); font-size:13px; font-weight:600;">Step 1 · Pay ${rupee(total)} via UPI</div>
-          <div style="padding:16px; display:flex; gap:16px; align-items:center;">
-            <img src="${qrImg}" width="90" height="90" alt="UPI QR code" style="border:1px solid var(--line); background:#fff;">
-            <div style="flex:1;">
-              <div style="font-size:11.5px; color:var(--muted); margin-bottom:4px;">Scan with any UPI app, or pay to:</div>
-              <div style="display:flex; align-items:center; gap:8px;">
-                <span class="mono" id="upiIdText" style="font-size:13px; word-break:break-all;">${UPI_ID}</span>
-                <button type="button" id="copyUpiBtn" class="btn btn-outline" style="padding:5px 10px; font-size:11.5px; white-space:nowrap;">Copy</button>
-              </div>
+        <div style="margin-top:22px; border:1px solid var(--line); border-radius:6px; overflow:hidden;">
+          <div style="padding:14px 16px; border-bottom:1px solid var(--line); font-size:13px; font-weight:600; background:var(--mist);">Step 1 · Scan &amp; pay via UPI</div>
+          <div style="padding:22px 16px; display:flex; flex-direction:column; align-items:center; text-align:center;">
+            <img src="${qrImg}" width="220" height="220" alt="UPI QR code to pay ${rupee(total)}" style="width:220px; height:220px; border:1px solid var(--line); border-radius:8px; background:#fff; padding:6px;">
+            <div style="font-size:12px; color:var(--muted); margin:14px 0 6px;">Scan with GPay / PhonePe / Paytm, or pay to:</div>
+            <div style="display:flex; align-items:center; gap:8px;">
+              <span class="mono" style="font-size:13px; word-break:break-all;">${UPI_ID}</span>
+              <button type="button" id="copyUpiBtn" class="btn btn-outline" style="padding:5px 10px; font-size:11.5px; white-space:nowrap;">Copy</button>
             </div>
           </div>
-          <div style="padding:0 16px 16px;">
+          <div style="padding:0 16px 18px;">
             <a href="${upiLink}" id="upiPayBtn" class="btn btn-primary btn-block">Open UPI app to pay ${rupee(total)}</a>
-            <p id="upiHint" style="display:none; font-size:12px; color:var(--muted); margin:10px 0 0;">Didn't open a payment app? That button only works on a phone with GPay/PhonePe/Paytm installed. On a laptop, scan the QR code above with your phone's UPI app instead.</p>
+            <p id="upiHint" style="display:none; font-size:12px; color:var(--muted); margin:10px 0 0; text-align:center;">On a laptop this button won't open an app — scan the QR code above with your phone, then tap "I've completed the payment" below.</p>
           </div>
         </div>
 
-        <div style="margin-top:16px; text-align:left; border:1px solid var(--line);">
-          <div style="padding:14px 16px; border-bottom:1px solid var(--line); font-size:13px; font-weight:600;">Step 2 · Confirm your payment</div>
-          <div style="padding:16px;">
-            <p style="font-size:13px; color:var(--muted); margin:0 0 12px;">After paying, send us your screenshot on WhatsApp with your order ID — we'll confirm and dispatch.</p>
-            <a href="${waLink}" target="_blank" rel="noopener" class="btn btn-dark btn-block">I've paid — send screenshot on WhatsApp</a>
-          </div>
+        <div id="step2Box" style="margin-top:16px; border:1px solid var(--line); border-radius:6px; padding:16px;">
+          <div style="font-size:13px; font-weight:600; margin-bottom:10px;">Step 2 · Confirm your payment</div>
+          <p style="font-size:12.5px; color:var(--muted); margin:0 0 12px;">Once you've paid ${rupee(total)} (by scanning the QR or the button above), tap below. It sends your order &amp; address to us on WhatsApp so we can pack and dispatch.</p>
+          <button type="button" id="confirmPaidBtn" class="btn btn-dark btn-block">I've completed the payment</button>
         </div>
 
-        <button class="btn btn-outline btn-block" id="closeSuccess" style="margin-top:16px;">Close</button>
+        <button class="btn btn-outline btn-block" id="closeSuccess" style="margin-top:16px;">Cancel</button>
       </div>
     `;
+
     document.getElementById('copyUpiBtn').addEventListener('click', ()=>{
       navigator.clipboard.writeText(UPI_ID).then(()=>{
         const btn = document.getElementById('copyUpiBtn');
@@ -1183,14 +1211,39 @@
       });
     });
     document.getElementById('upiPayBtn').addEventListener('click', ()=>{
-      setTimeout(()=>{
-        document.getElementById('upiHint').style.display = 'block';
-      }, 1200);
+      setTimeout(()=>{ document.getElementById('upiHint').style.display = 'block'; }, 1200);
     });
+
+    // ---------- SCREEN 2: CONFIRMED (after "I've paid") ----------
+    document.getElementById('confirmPaidBtn').addEventListener('click', ()=>{
+      // Send full order details to the seller's WhatsApp automatically
+      window.open(waLink, '_blank', 'noopener');
+
+      modalContent.innerHTML = `
+        <div class="success-screen">
+          <div class="tick">✓</div>
+          <h3>Order confirmed</h3>
+          <div class="order-id">${orderId}</div>
+          <p>Thanks ${name.split(' ')[0]}! We've received your order details and will dispatch to <b>${area}, Bangalore - ${pincode}</b> within 24–48 hrs.</p>
+          <div style="margin-top:20px; text-align:left; border:1px solid var(--line); border-radius:6px; padding:16px; font-size:13px; line-height:1.7; background:var(--mist);">
+            <div><b>${PRODUCT.name}</b> (${PRODUCT.size}) × ${qty}</div>
+            <div>Amount: <b>${rupee(total)}</b> · Paid via UPI</div>
+            <div>Deliver to: ${address}, ${area} - ${pincode}</div>
+            <div>Phone: ${phone}</div>
+          </div>
+          <p style="font-size:12px; color:var(--muted); margin-top:14px;">If the WhatsApp tab didn't open, <a href="${waLink}" target="_blank" rel="noopener" style="color:var(--aqua-deep); font-weight:600;">tap here to send us your order</a>.</p>
+          <button class="btn btn-primary btn-block" id="closeSuccess2" style="margin-top:16px;">Done</button>
+        </div>
+      `;
+      document.getElementById('closeSuccess2').addEventListener('click', ()=>{
+        closeCheckout();
+        cart = {};
+        renderCart();
+      });
+    });
+
     document.getElementById('closeSuccess').addEventListener('click', ()=>{
       closeCheckout();
-      cart = {};
-      renderCart();
     });
   });
 
@@ -1200,7 +1253,7 @@
     { q: 'Does it smell like onion?', a: 'There is a faint natural herbal smell right after spraying, which fades within a few minutes as it dries.' },
     { q: 'Do you deliver outside Bangalore?', a: 'Not at the moment. We currently deliver only within Bangalore (pincodes starting 560) to keep delivery fast and reliable. We may expand to other cities later.' },
     { q: 'How long does delivery take?', a: 'Most Bangalore orders are delivered within 24–48 hours of confirmation.' },
-    { q: 'What payment methods do you accept?', a: "Payment is online via UPI only — GPay, PhonePe, Paytm or any UPI app. After placing your order you'll get a UPI pay button and our UPI ID; send a payment screenshot on WhatsApp to confirm dispatch." },
+    { q: 'What payment methods do you accept?', a: "Payment is online via UPI only — GPay, PhonePe, Paytm or any UPI app. Enter your details, scan the QR to pay, then tap 'I've paid' — your order and address are sent to us automatically and we dispatch. No GST and no delivery charges." },
     { q: 'Will this cure hair loss?', a: 'Jad Se is a herb-infused water rinse meant to support scalp health, especially where hard water is a factor — it is not a medical treatment and results vary. For persistent or severe hair loss, please see a dermatologist.' },
     { q: 'How long does one bottle last?', a: 'Since it is boiled fresh with no preservatives, one 100ml bottle should be used within 1 week of opening — refrigerate it and use twice daily (morning and night) during that time.' },
     { q: 'Do I need to refrigerate it?', a: 'Yes. Because there are no preservatives, keep the bottle refrigerated after opening and use it up within a week for best results.' }
