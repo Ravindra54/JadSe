@@ -191,11 +191,11 @@
   }
   .hero-slideshow img{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
-    opacity:0; transform:scale(1.05); z-index:1;
-    filter:blur(14px) drop-shadow(0 30px 40px rgba(15,42,41,0.3));
-    transition:opacity 1.2s ease, filter 1.2s ease, transform 1.2s ease;
+    opacity:0; filter:blur(16px); transform:scale(1.07);
+    transition:opacity 1.5s ease, filter 1.5s ease, transform 1.5s ease;
+    filter:blur(16px) drop-shadow(0 30px 40px rgba(15,42,41,0.3));
   }
-  .hero-slideshow img.active{ opacity:1; z-index:2; filter:blur(0) drop-shadow(0 30px 40px rgba(15,42,41,0.3)); transform:scale(1); }
+  .hero-slideshow img.active{ opacity:1; filter:blur(0) drop-shadow(0 30px 40px rgba(15,42,41,0.3)); transform:scale(1); z-index:2; }
   @media (prefers-reduced-motion: reduce){
     .hero-slideshow{ animation:none; }
     .hero-slideshow img{ transition:opacity .3s ease; filter:none; transform:none; }
@@ -273,12 +273,11 @@
   }
   .slideshow img{
     position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
-    opacity:0; transform:scale(1.04); z-index:1;
-    filter:blur(12px) drop-shadow(0 24px 40px rgba(0,0,0,0.35));
-    transition:opacity 1.2s ease, filter 1.2s ease, transform 1.2s ease;
+    opacity:0; transform:scale(1.06);
+    filter:blur(14px) drop-shadow(0 24px 40px rgba(0,0,0,0.35));
+    transition:opacity 1.4s ease, filter 1.4s ease, transform 1.4s ease;
   }
-  /* incoming image sits on top and fades in over the previous one (no blank gap) */
-  .slideshow img.active{ opacity:1; z-index:2; filter:blur(0) drop-shadow(0 24px 40px rgba(0,0,0,0.35)); transform:scale(1); }
+  .slideshow img.active{ opacity:1; filter:blur(0) drop-shadow(0 24px 40px rgba(0,0,0,0.35)); transform:scale(1); z-index:2; }
   @media (prefers-reduced-motion: reduce){
     .slideshow img{ transition:opacity .3s ease; filter:none; transform:none; }
   }
@@ -1003,13 +1002,9 @@
     if(imgs.length < 2) return;
     let i = 0;
     setInterval(() => {
-      const current = imgs[i];
+      imgs[i].classList.remove('active');
       i = (i + 1) % imgs.length;
-      const next = imgs[i];
-      // Bring the next image in on top first (it fades in over the current one),
-      // then drop the previous one out after the fade — this avoids any blank gap.
-      next.classList.add('active');
-      setTimeout(() => { current.classList.remove('active'); }, 1200);
+      imgs[i].classList.add('active');
     }, 4200);
   });
 
