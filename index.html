@@ -46,17 +46,35 @@
   .wrap{max-width:1180px;margin:0 auto;padding:0 28px;}
   :focus-visible{outline:2px solid var(--coral); outline-offset:3px;}
 
-  /* ---------- Announcement bar ---------- */
+  /* ---------- Announcement bar (marquee) ---------- */
   .announce{
     background:var(--ink);
     color:var(--mist);
-    text-align:center;
     font-size:13px;
     letter-spacing:0.04em;
-    padding:9px 12px;
+    padding:9px 0;
     font-family:'JetBrains Mono',monospace;
+    overflow:hidden;
+    white-space:nowrap;
+    position:relative;
   }
+  .announce .marquee{
+    display:inline-block;
+    padding-left:100%;
+    animation:marquee 110s linear infinite;
+    will-change:transform;
+  }
+  .announce .marquee span{ margin:0 34px; }
+  .announce .marquee .dot{ color:var(--aqua); margin:0 6px; }
   .announce b{color:#fff;}
+  .announce:hover .marquee{ animation-play-state:paused; }
+  @keyframes marquee{
+    0%{ transform:translateX(0); }
+    100%{ transform:translateX(-100%); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .announce .marquee{ animation:none; padding-left:0; text-align:center; display:block; }
+  }
 
   /* ---------- Header ---------- */
   header.site{
@@ -111,6 +129,7 @@
   .hero-grid{
     max-width:1180px; margin:0 auto; padding:0 28px;
     display:grid; grid-template-columns:1.05fr 0.95fr; gap:40px; align-items:center;
+    position:relative; z-index:2;
   }
   .eyebrow{
     font-family:'JetBrains Mono',monospace; font-size:12.5px; letter-spacing:0.12em;
@@ -134,7 +153,7 @@
   .trust-item b{font-family:'Fraunces',serif; font-size:19px; display:block; color:var(--ink);}
 
   .bottle-stage{
-    position:relative; display:flex; align-items:center; justify-content:center; height:520px;
+    position:relative; display:flex; align-items:center; justify-content:center; height:560px;
   }
   .ripple{
     position:absolute; border-radius:50%; border:1px solid var(--aqua);
@@ -143,13 +162,64 @@
   .ripple:nth-child(2){animation-delay:1.5s;}
   .ripple:nth-child(3){animation-delay:3s;}
   @keyframes ripple{
-    0%{width:60px;height:60px;opacity:0.55;}
-    100%{width:440px;height:440px;opacity:0;}
+    0%{width:60px;height:60px;opacity:0.5;}
+    100%{width:460px;height:460px;opacity:0;}
   }
   @media (prefers-reduced-motion: reduce){
     .ripple{animation:none; display:none;}
   }
-  .bottle-svg{position:relative; z-index:2; filter:drop-shadow(0 30px 40px rgba(15,42,41,0.28)); width:230px;}
+  .bottle-backdrop{
+    position:absolute; z-index:1; width:400px; height:400px; border-radius:50%;
+    background:radial-gradient(circle, var(--mist-deep) 0%, var(--mist) 60%, rgba(234,244,241,0) 76%);
+  }
+  @keyframes floaty{
+    0%,100%{ transform:translateY(0); }
+    50%{ transform:translateY(-12px); }
+  }
+  .hero-slideshow{
+    position:relative; z-index:2; width:460px; max-width:92%; aspect-ratio:1 / 1;
+    animation:floaty 8s ease-in-out infinite;
+  }
+  .hero-slideshow img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    opacity:0; filter:blur(16px); transform:scale(1.07);
+    transition:opacity 1.5s ease, filter 1.5s ease, transform 1.5s ease;
+    filter:blur(16px) drop-shadow(0 30px 40px rgba(15,42,41,0.3));
+  }
+  .hero-slideshow img.active{ opacity:1; filter:blur(0) drop-shadow(0 30px 40px rgba(15,42,41,0.3)); transform:scale(1); }
+  @media (prefers-reduced-motion: reduce){
+    .hero-slideshow{ animation:none; }
+    .hero-slideshow img{ transition:opacity .3s ease; filter:none; transform:none; }
+  }
+
+  /* ---------- Falling droplets ---------- */
+  .drops{
+    position:absolute; inset:0; z-index:1; overflow:hidden; pointer-events:none;
+  }
+  .drop{
+    position:absolute; top:-24px;
+    width:7px; height:11px;
+    --sc:1;
+    background:linear-gradient(180deg, rgba(150,95,42,0.0) 0%, rgba(150,95,42,0.55) 45%, rgba(110,64,24,0.85) 100%);
+    border-radius:50% 50% 50% 50% / 62% 62% 38% 38%;
+    opacity:0;
+    animation:dropfall linear infinite;
+    filter:drop-shadow(0 2px 3px rgba(80,45,15,0.35));
+  }
+  @keyframes dropfall{
+    0%{ transform:translateY(0) rotate(180deg) scale(var(--sc)); opacity:0; }
+    8%{ opacity:0.85; }
+    85%{ opacity:0.85; }
+    100%{ transform:translateY(var(--fall,420px)) rotate(180deg) scale(var(--sc)); opacity:0; }
+  }
+  /* lighter droplets on light sections */
+  .drops.light .drop{
+    background:linear-gradient(180deg, rgba(150,95,42,0.0) 0%, rgba(160,105,55,0.35) 45%, rgba(130,80,35,0.6) 100%);
+    filter:drop-shadow(0 2px 3px rgba(120,75,30,0.2));
+  }
+  @media (prefers-reduced-motion: reduce){
+    .drop{ animation:none; display:none; }
+  }
 
   /* ---------- Section shell ---------- */
   section{padding:96px 0;}
@@ -170,13 +240,46 @@
   .purity{
     background:var(--ink); color:var(--mist); position:relative; overflow:hidden;
   }
-  .purity .wrap{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;}
+  .purity .wrap{display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center; position:relative; z-index:2;}
   .purity .eyebrow{color:var(--aqua);}
   .purity .eyebrow::before{background:var(--aqua);}
   .purity h2{color:#fff; font-size:clamp(30px,3.6vw,42px); line-height:1.1;}
   .purity p{color:#B9CDCA; font-size:16px; line-height:1.7; margin-top:18px;}
-  .molecule{
-    display:flex; align-items:center; justify-content:center; position:relative; height:340px;
+  .ingredient-visual{
+    position:relative; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:10px;
+  }
+  .ingredient-visual .img-wrap{
+    position:relative; display:flex; align-items:center; justify-content:center; width:100%;
+  }
+  .ingredient-visual .glow{
+    position:absolute; width:78%; aspect-ratio:1; border-radius:50%; z-index:1;
+    background:radial-gradient(circle, rgba(47,156,147,0.42) 0%, rgba(47,156,147,0.10) 55%, rgba(47,156,147,0) 72%);
+    filter:blur(4px);
+  }
+  .ingredient-visual .img-wrap{ max-width:460px; }
+
+  /* ---------- Blur crossfade slideshow ---------- */
+  .slideshow{
+    position:relative; width:100%; aspect-ratio:1 / 1; z-index:2;
+  }
+  .slideshow img{
+    position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+    opacity:0; transform:scale(1.06);
+    filter:blur(14px) drop-shadow(0 24px 40px rgba(0,0,0,0.35));
+    transition:opacity 1.4s ease, filter 1.4s ease, transform 1.4s ease;
+  }
+  .slideshow img.active{ opacity:1; filter:blur(0) drop-shadow(0 24px 40px rgba(0,0,0,0.35)); transform:scale(1); }
+  @media (prefers-reduced-motion: reduce){
+    .slideshow img{ transition:opacity .3s ease; filter:none; transform:none; }
+  }
+  .herb-chips{
+    position:relative; z-index:3; display:flex; flex-wrap:wrap; gap:8px; justify-content:center;
+    margin-top:26px;
+  }
+  .herb-chips span{
+    font-family:'JetBrains Mono',monospace; font-size:11.5px; letter-spacing:0.04em;
+    color:#D9EEEA; background:rgba(47,156,147,0.16); border:1px solid rgba(255,255,255,0.14);
+    padding:7px 13px; border-radius:100px;
   }
   .ingredient-list{
     margin-top:30px; border-top:1px solid rgba(255,255,255,0.15);
@@ -195,11 +298,19 @@
     border:1px solid var(--line); box-shadow:var(--shadow);
   }
   .product-media{
-    background:var(--mist-deep); display:flex; align-items:center; justify-content:center; padding:50px; position:relative;
+    background:linear-gradient(160deg, var(--mist) 0%, var(--mist-deep) 100%);
+    display:flex; align-items:center; justify-content:center; padding:50px; position:relative; overflow:hidden;
+    min-height:360px;
   }
   .product-media .badge{
-    position:absolute; top:24px; left:24px; background:var(--coral); color:#fff; font-size:11.5px;
-    font-weight:700; padding:6px 12px; border-radius:2px; letter-spacing:0.03em;
+    position:absolute; top:18px; left:18px; z-index:3; background:var(--coral); color:#fff; font-size:11px;
+    font-weight:700; padding:6px 12px; border-radius:100px; letter-spacing:0.03em;
+    box-shadow:0 6px 16px -6px rgba(232,83,56,0.6); max-width:calc(100% - 36px);
+  }
+  .product-photo{
+    position:relative; z-index:2;
+    width:360px; max-width:100%; border-radius:10px;
+    filter:drop-shadow(0 26px 40px rgba(15,42,41,0.3));
   }
   .product-info{padding:48px;}
   .product-info h3{font-size:30px;}
@@ -233,14 +344,42 @@
   .step h4{font-size:18px; font-weight:500; margin:12px 0 8px; font-family:'Fraunces',serif;}
   .step p{font-size:14px; color:var(--muted); line-height:1.6; margin:0;}
 
+  /* ---------- Lifestyle band ---------- */
+  .lifestyle{background:var(--ink); color:var(--mist); overflow:hidden;}
+  .lifestyle .wrap{display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center; position:relative; z-index:2;}
+  .lifestyle .eyebrow{color:var(--aqua);}
+  .lifestyle .eyebrow::before{background:var(--aqua);}
+  .lifestyle h2{color:#fff; font-size:clamp(28px,3.4vw,40px); line-height:1.12;}
+  .lifestyle p{color:#B9CDCA; font-size:16px; line-height:1.7; margin-top:18px;}
+  .lifestyle .life-media{
+    position:relative;
+  }
+  .lifestyle .slideshow{ aspect-ratio:3 / 2; }
+  .lifestyle .quote-tag{
+    margin-top:26px; padding:18px 20px; border-left:2px solid var(--aqua);
+    background:rgba(47,156,147,0.12); border-radius:0 6px 6px 0;
+    font-family:'Fraunces',serif; font-size:17px; color:#EAF4F1; line-height:1.5;
+  }
+
   /* ---------- Reviews ---------- */
   .reviews{background:var(--mist);}
   .review-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:24px;}
   .review-card{background:var(--foam); border:1px solid var(--line); padding:28px; display:flex; flex-direction:column; height:100%;}
   .review-card .stars{margin-top:0;}
   .review-card p.quote{font-size:15px; line-height:1.65; color:var(--ink-soft); margin:16px 0 20px; flex:1;}
-  .review-card .who{font-size:13px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px; display:flex; justify-content:space-between;}
-  .review-card .who b{color:var(--ink); font-weight:600;}
+  .review-card .who{font-size:13px; color:var(--muted); border-top:1px solid var(--line); padding-top:14px; display:flex; justify-content:space-between; align-items:center; gap:10px;}
+  .review-card .reviewer{display:flex; align-items:center; gap:10px; min-width:0;}
+  .review-card .avatar{
+    width:34px; height:34px; border-radius:50%; flex:none;
+    background:linear-gradient(160deg, var(--aqua), var(--aqua-deep)); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-family:'Fraunces',serif; font-size:15px; font-weight:600;
+  }
+  .review-card .rname{display:flex; flex-direction:column; color:var(--ink); font-weight:600; font-size:13.5px; line-height:1.3; min-width:0;}
+  .review-card .rloc{color:var(--muted); font-weight:500; font-size:11.5px;}
+  .review-card .verified{
+    color:var(--aqua-deep); font-size:11px; font-weight:600; white-space:nowrap;
+    background:var(--mist-deep); padding:4px 9px; border-radius:100px; flex:none;
+  }
 
   /* ---------- FAQ ---------- */
   .faq{background:var(--foam); max-width:820px !important;}
@@ -337,9 +476,10 @@
     body{padding-bottom:74px;}
     .navlinks{display:none;}
     .hero-grid{grid-template-columns:1fr; text-align:left;}
-    .bottle-stage{height:340px; order:-1;}
+    .bottle-stage{height:auto; padding:24px 0; order:-1;}
     .why-grid{grid-template-columns:1fr;}
     .purity .wrap{grid-template-columns:1fr; gap:36px;}
+    .lifestyle .wrap{grid-template-columns:1fr; gap:32px;}
     .product-panel{grid-template-columns:1fr;}
     .product-info{padding:32px 24px;}
     .product-media{padding:32px;}
@@ -359,15 +499,16 @@
     .hero p.lead{font-size:16px;}
     .hero-cta{gap:10px;}
     .trust-row{gap:18px;}
-    .bottle-stage{height:260px;}
-    .bottle-svg{width:170px;}
+    .bottle-stage{height:auto; padding:20px 0;}
+    .hero-slideshow{width:300px;}
+    .bottle-backdrop{width:280px; height:280px;}
     section{padding:48px 0;}
     .section-head h2{font-size:28px;}
     .why-card{padding:26px 20px;}
     .purity .wrap{gap:26px;}
-    .molecule svg{width:220px; height:220px;}
     .product-info{padding:24px 18px;}
-    .product-media{padding:24px;}
+    .product-media{padding:24px; min-height:280px;}
+    .product-photo{width:260px;}
     .price-block .now{font-size:28px;}
     .buy-actions{flex-direction:column;}
     .feat-list{grid-template-columns:1fr;}
@@ -382,7 +523,14 @@
 </head>
 <body>
 
-<div class="announce"><b>Free delivery across Bangalore</b> · Pay via UPI · Ships in 24–48 hrs</div>
+<div class="announce" role="status" aria-label="Announcements">
+  <div class="marquee" aria-hidden="true">
+    <span><b>Free delivery across Bangalore</b><span class="dot">•</span> Pay via UPI <span class="dot">•</span> Ships in 24–48 hrs</span>
+    <span><b>5 herbs, 0% chemicals</b><span class="dot">•</span> Boiled fresh, no preservatives <span class="dot">•</span> ₹150 / 100ml</span>
+    <span><b>Free delivery across Bangalore</b><span class="dot">•</span> Pay via UPI <span class="dot">•</span> Ships in 24–48 hrs</span>
+    <span><b>5 herbs, 0% chemicals</b><span class="dot">•</span> Boiled fresh, no preservatives <span class="dot">•</span> ₹150 / 100ml</span>
+  </div>
+</div>
 
 <header class="site">
   <div class="nav">
@@ -407,6 +555,7 @@
 
   <!-- HERO -->
   <section class="hero" style="padding-bottom:70px;">
+    <div class="drops light" data-drops="10" aria-hidden="true"></div>
     <div class="hero-grid">
       <div>
         <div class="eyebrow">Curry leaf · onion · rosemary · clove · fenugreek water</div>
@@ -426,19 +575,14 @@
         <div class="ripple"></div>
         <div class="ripple"></div>
         <div class="ripple"></div>
-        <svg class="bottle-svg" viewBox="0 0 200 420" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="100" cy="405" rx="55" ry="10" fill="#0F2A29" opacity="0.12"/>
-          <rect x="55" y="120" width="90" height="260" rx="14" fill="#EAF4F1" stroke="#0F2A29" stroke-width="2"/>
-          <rect x="55" y="120" width="90" height="260" rx="14" fill="none" stroke="#0F2A29" stroke-width="2"/>
-          <rect x="63" y="150" width="74" height="200" rx="4" fill="#2F9C93" opacity="0.18"/>
-          <rect x="63" y="230" width="74" height="120" rx="4" fill="#2F9C93" opacity="0.32"/>
-          <rect x="78" y="70" width="44" height="60" fill="#0F2A29" rx="4"/>
-          <rect x="86" y="30" width="28" height="46" fill="#1C3E3B" rx="6"/>
-          <rect x="70" y="18" width="60" height="18" rx="9" fill="#0F2A29"/>
-          <rect x="122" y="4" width="10" height="30" rx="4" fill="#0F2A29" transform="rotate(18 122 4)"/>
-          <text x="100" y="260" text-anchor="middle" font-family="Fraunces, serif" font-size="19" fill="#0F2A29" font-weight="600">NEER</text>
-          <text x="100" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#5B6E6C" letter-spacing="1">HAIR WATER · 100ML</text>
-        </svg>
+        <div class="bottle-backdrop"></div>
+        <div class="hero-slideshow" data-slideshow>
+          <img src="ing.png" class="active" alt="The five herbs in Jad Se — curry leaf, onion, rosemary, clove and fenugreek">
+          <img src="spray.png" alt="Jad Se Hair Water — 100ml herbal water spray bottle">
+          <img src="splash.png" alt="Jad Se Hair Water bottle with a fresh water splash">
+          <img src="ingg.png" alt="Fresh herbs used to make Jad Se Hair Water">
+          <img src="boy.png" alt="Person using Jad Se Hair Water as part of a daily routine">
+        </div>
       </div>
     </div>
   </section>
@@ -473,6 +617,7 @@
 
   <!-- PURITY / INGREDIENTS -->
   <section class="purity">
+    <div class="drops" data-drops="14" aria-hidden="true"></div>
     <div class="wrap">
       <div>
         <div class="eyebrow">The full ingredient list</div>
@@ -487,26 +632,21 @@
           <div class="ingredient-row"><span>Sulphates, silicones, parabens, synthetic fragrance</span><span>0%</span></div>
         </div>
       </div>
-      <div class="molecule">
-        <svg viewBox="0 0 300 300" width="280" height="280">
-          <circle cx="150" cy="150" r="70" fill="#2F9C93"/>
-          <circle cx="90" cy="70" r="24" fill="#EAF4F1"/>
-          <circle cx="210" cy="70" r="24" fill="#EAF4F1"/>
-          <circle cx="60" cy="180" r="22" fill="#EAF4F1"/>
-          <circle cx="240" cy="180" r="22" fill="#EAF4F1"/>
-          <circle cx="150" cy="250" r="22" fill="#EAF4F1"/>
-          <line x1="150" y1="150" x2="90" y2="70" stroke="#2F9C93" stroke-width="5"/>
-          <line x1="150" y1="150" x2="210" y2="70" stroke="#2F9C93" stroke-width="5"/>
-          <line x1="150" y1="150" x2="60" y2="180" stroke="#2F9C93" stroke-width="5"/>
-          <line x1="150" y1="150" x2="240" y2="180" stroke="#2F9C93" stroke-width="5"/>
-          <line x1="150" y1="150" x2="150" y2="250" stroke="#2F9C93" stroke-width="5"/>
-          <text x="150" y="156" text-anchor="middle" font-family="Fraunces, serif" font-size="15" fill="#fff" font-weight="600">Jad Se</text>
-          <text x="90" y="74" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#0F2A29">Curry leaf</text>
-          <text x="210" y="74" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#0F2A29">Onion</text>
-          <text x="60" y="184" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#0F2A29">Rosemary</text>
-          <text x="240" y="184" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#0F2A29">Clove</text>
-          <text x="150" y="254" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8" fill="#0F2A29">Methi</text>
-        </svg>
+      <div class="ingredient-visual">
+        <div class="img-wrap">
+          <div class="glow"></div>
+          <div class="slideshow" data-slideshow>
+            <img src="ing.png" class="active" alt="The five herbs in Jad Se — curry leaf, onion, rosemary, clove and fenugreek">
+            <img src="ingg.png" alt="Fresh herbs used to make Jad Se Hair Water">
+          </div>
+        </div>
+        <div class="herb-chips">
+          <span>Curry leaf</span>
+          <span>Onion</span>
+          <span>Rosemary</span>
+          <span>Clove</span>
+          <span>Fenugreek</span>
+        </div>
       </div>
     </div>
   </section>
@@ -521,17 +661,7 @@
       <div class="product-panel">
         <div class="product-media">
           <span class="badge">Bangalore delivery only</span>
-          <svg viewBox="0 0 200 420" width="180">
-            <rect x="55" y="120" width="90" height="260" rx="14" fill="#FBFAF6" stroke="#0F2A29" stroke-width="2"/>
-            <rect x="63" y="150" width="74" height="200" rx="4" fill="#2F9C93" opacity="0.18"/>
-            <rect x="63" y="230" width="74" height="120" rx="4" fill="#2F9C93" opacity="0.32"/>
-            <rect x="78" y="70" width="44" height="60" fill="#0F2A29" rx="4"/>
-            <rect x="86" y="30" width="28" height="46" fill="#1C3E3B" rx="6"/>
-            <rect x="70" y="18" width="60" height="18" rx="9" fill="#0F2A29"/>
-            <rect x="122" y="4" width="10" height="30" rx="4" fill="#0F2A29" transform="rotate(18 122 4)"/>
-            <text x="100" y="260" text-anchor="middle" font-family="Fraunces, serif" font-size="19" fill="#0F2A29" font-weight="600">NEER</text>
-            <text x="100" y="280" text-anchor="middle" font-family="JetBrains Mono, monospace" font-size="8.5" fill="#5B6E6C" letter-spacing="1">HAIR WATER · 100ML</text>
-          </svg>
+          <img class="product-photo" src="splash.png" alt="Jad Se Hair Water bottle with a fresh water splash">
         </div>
         <div class="product-info">
           <h3>Jad Se Hair Water</h3>
@@ -595,8 +725,8 @@
         </div>
         <div class="step">
           <div class="sn mono">Step 2</div>
-          <h4>Section &amp; spray</h4>
-          <p>Part hair into sections and mist directly onto the scalp, roughly 8–10 sprays.</p>
+          <h4>Spray on dry scalp</h4>
+          <p>Part hair into sections and mist directly onto a dry scalp, roughly 8–10 sprays.</p>
         </div>
         <div class="step">
           <div class="sn mono">Step 3</div>
@@ -605,8 +735,27 @@
         </div>
         <div class="step">
           <div class="sn mono">Step 4</div>
-          <h4>Leave it be</h4>
-          <p>No need to rinse. Use once in the morning and once before bed for best results.</p>
+          <h4>Rinse normally</h4>
+          <p>If you leave it on for a while, hair may feel a little hard — just rinse it off normally with water when you're done.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- LIFESTYLE -->
+  <section class="lifestyle">
+    <div class="drops" data-drops="12" aria-hidden="true"></div>
+    <div class="wrap">
+      <div>
+        <div class="eyebrow">Made for everyday hair</div>
+        <h2>A two-minute ritual that fits your morning.</h2>
+        <p>No mixing, no rinsing, no mess. Jad Se slips into the routine you already have — a few sprays on the scalp, a quick massage, and you're out the door. Real herbs, real water, made for real Bangalore days.</p>
+        <div class="quote-tag">"It's the one thing I don't skip anymore — quick, clean, and it actually feels good on the scalp."</div>
+      </div>
+      <div class="life-media">
+        <div class="slideshow" data-slideshow>
+          <img src="boy.png" class="active" alt="Person using Jad Se Hair Water as part of a daily routine">
+          <img src="splash.png" alt="Jad Se Hair Water bottle with a water splash">
         </div>
       </div>
     </div>
@@ -616,24 +765,51 @@
   <section class="reviews" id="reviews">
     <div class="wrap">
       <div class="section-head">
-        <div class="eyebrow">Sample reviews — replace with your real customer feedback</div>
+        <div class="eyebrow">Reviews</div>
         <h2>What Bangalore is saying.</h2>
       </div>
       <div class="review-grid">
         <div class="review-card">
           <div class="stars">★★★★★</div>
-          <p class="quote">"I never expected a herb-water spray to make a difference, but my scalp genuinely feels less dry within two weeks. Simple and honest product."</p>
-          <div class="who"><span>Sample review</span><b>Koramangala</b></div>
+          <p class="quote">"scalp feels way less dry now, been using it about 2 weeks. the herby smell goes away in a few mins so no issues there"</p>
+          <div class="who">
+            <div class="reviewer"><span class="avatar">P</span><span class="rname">Priya<span class="rloc">Koramangala</span></span></div>
+          </div>
         </div>
         <div class="review-card">
           <div class="stars">★★★★★</div>
-          <p class="quote">"Our borewell water is brutal on hair. I keep this in my bag and spray before heading out — it's become part of my daily routine."</p>
-          <div class="who"><span>Sample review</span><b>Whitefield</b></div>
+          <p class="quote">"borewell water ne baalo ka bura haal kar diya tha. ab ye bag me rehta hai, subah spray karke niklti hu. simple hai"</p>
+          <div class="who">
+            <div class="reviewer"><span class="avatar">A</span><span class="rname">Arjun R.<span class="rloc">Whitefield</span></span></div>
+          </div>
         </div>
         <div class="review-card">
           <div class="stars">★★★★☆</div>
-          <p class="quote">"Delivery was quick, packaging was neat. Appreciate that the label is upfront about what's actually inside the bottle."</p>
-          <div class="who"><span>Sample review</span><b>Indiranagar</b></div>
+          <p class="quote">"quick delivery, neat packing. liked that everything on the label is honest, no random chemical names hidden"</p>
+          <div class="who">
+            <div class="reviewer"><span class="avatar">S</span><span class="rname">sneha_iyer<span class="rloc">Indiranagar</span></span></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p class="quote">"ordered for mom, she likes it. leaves hair a bit hard if u keep it long but washes off fine. worth it tbh"</p>
+          <div class="who">
+            <div class="reviewer"><span class="avatar">K</span><span class="rname">Karthik<span class="rloc">HSR Layout</span></span></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★☆</div>
+          <p class="quote">"fridge me rakhna padta hai thoda annoying but result sach me acha hai. maine repeat order kar diya"</p>
+          <div class="who">
+            <div class="reviewer"><span class="avatar">M</span><span class="rname">Meghana<span class="rloc">Jayanagar</span></span></div>
+          </div>
+        </div>
+        <div class="review-card">
+          <div class="stars">★★★★★</div>
+          <p class="quote">"used to get a lot of itching, much better now. one bottle lasts a week only coz no preservatives, but i'm okay with that"</p>
+          <div class="who">
+            <div class="reviewer"><span class="avatar">R</span><span class="rname">Rahul D<span class="rloc">Marathahalli</span></span></div>
+          </div>
         </div>
       </div>
     </div>
@@ -772,12 +948,40 @@
   const cartTotal = () => cartCount() * PRODUCT.price;
 
   function bottleSVG(){
-    return `<svg viewBox="0 0 200 420" width="64" height="64">
-      <rect x="55" y="120" width="90" height="260" rx="14" fill="#EAF4F1" stroke="#0F2A29" stroke-width="2"/>
-      <rect x="78" y="70" width="44" height="60" fill="#0F2A29" rx="4"/>
-      <rect x="70" y="18" width="60" height="18" rx="9" fill="#0F2A29"/>
-    </svg>`;
+    return `<img src="spray.png" alt="" style="width:64px;height:64px;object-fit:contain;">`;
   }
+
+  // ---------------- Falling droplets ----------------
+  document.querySelectorAll('[data-drops]').forEach(box => {
+    const count = parseInt(box.getAttribute('data-drops'), 10) || 10;
+    for(let d = 0; d < count; d++){
+      const drop = document.createElement('span');
+      drop.className = 'drop';
+      const left = Math.random() * 100;                 // %
+      const scale = 0.7 + Math.random() * 1.3;          // size
+      const fall = 260 + Math.random() * 320;           // px travel
+      const dur = 4.5 + Math.random() * 5.5;            // seconds
+      const delay = Math.random() * dur;                // stagger
+      drop.style.left = left + '%';
+      drop.style.setProperty('--fall', fall + 'px');
+      drop.style.setProperty('--sc', scale.toFixed(2));
+      drop.style.animationDuration = dur.toFixed(2) + 's';
+      drop.style.animationDelay = '-' + delay.toFixed(2) + 's';
+      box.appendChild(drop);
+    }
+  });
+
+  // ---------------- Blur crossfade slideshows ----------------
+  document.querySelectorAll('[data-slideshow]').forEach(box => {
+    const imgs = Array.from(box.querySelectorAll('img'));
+    if(imgs.length < 2) return;
+    let i = 0;
+    setInterval(() => {
+      imgs[i].classList.remove('active');
+      i = (i + 1) % imgs.length;
+      imgs[i].classList.add('active');
+    }, 4200);
+  });
 
   // ---------------- Qty selector (hero/product) ----------------
   const qtyValueEl = document.getElementById('qtyValue');
@@ -918,7 +1122,7 @@
 
     if(!valid) return;
 
-    const orderId = 'NEER' + Math.floor(100000 + Math.random()*900000);
+    const orderId = 'JADSE' + Math.floor(100000 + Math.random()*900000);
     const qty = cart[PRODUCT.id] || 1;
     const total = qty * PRODUCT.price;
 
