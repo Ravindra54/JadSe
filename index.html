@@ -1077,7 +1077,8 @@
   overlay.addEventListener('click', ()=>{ closeDrawer(); closeCheckout(); });
 
   document.getElementById('addToCartBtn').addEventListener('click', ()=>{
-    cart[PRODUCT.id] = (cart[PRODUCT.id]||0) + heroQty;
+    // Set the cart to the quantity chosen on the product page (don't keep adding on top).
+    cart[PRODUCT.id] = heroQty;
     renderCart();
     openDrawer();
   });
