@@ -1154,7 +1154,10 @@
 
     const UPI_ID = 'ravindranagarkoti894-1@oksbi'; // your UPI ID
     const upiNote = encodeURIComponent(`JadSe order ${orderId}`);
-    const upiLink = `upi://pay?pa=${UPI_ID}&pn=JadSe%20Hair%20Water&am=${total}&cu=INR&tn=${upiNote}`;
+    const upiParams = `pa=${UPI_ID}&pn=JadSe%20Hair%20Water&am=${total}&cu=INR&tn=${upiNote}`;
+    const upiLink = `upi://pay?${upiParams}`;
+    // Android Chrome: intent:// opens the UPI app chooser reliably (GPay/PhonePe/Paytm etc.)
+    const intentLink = `intent://pay?${upiParams}#Intent;scheme=upi;action=android.intent.action.VIEW;end`;
     const qrImg = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(upiLink)}`;
 
     // Full order details sent to the SELLER's WhatsApp so you get everything you need to dispatch.
@@ -1189,8 +1192,8 @@
             </div>
           </div>
           <div style="padding:0 16px 18px;">
-            <a href="${upiLink}" id="upiPayBtn" class="btn btn-primary btn-block">Open UPI app to pay ${rupee(total)}</a>
-            <p id="upiHint" style="display:none; font-size:12px; color:var(--muted); margin:10px 0 0; text-align:center;">On a laptop this button won't open an app — scan the QR code above with your phone, then tap "I've completed the payment" below.</p>
+            <button type="button" id="upiPayBtn" class="btn btn-primary btn-block">Open UPI app to pay ${rupee(total)}</button>
+            <p id="upiHint" style="display:none; font-size:12px; color:var(--muted); margin:10px 0 0; text-align:center;">If no app opened, scan the QR code above with your phone's UPI app instead, then tap "I've completed the payment" below.</p>
           </div>
         </div>
 
@@ -1212,6 +1215,21 @@
       });
     });
     document.getElementById('upiPayBtn').addEventListener('click', ()=>{
+      const ua = navigator.userAgent || '';
+      const isAndroid = /Android/i.test(ua);
+      const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+      if(isAndroid){
+        // intent:// makes Android show the "Open with" chooser (GPay / PhonePe / Paytm...)
+        window.location.href = intentLink;
+      } else if(isIOS){
+        // iOS: upi:// opens the installed UPI app
+        window.location.href = upiLink;
+      } else {
+        // Desktop/laptop: no UPI app — guide them to scan the QR instead
+        window.location.href = upiLink;
+      }
+      // Show the fallback hint shortly after, in case nothing opened
       setTimeout(()=>{ document.getElementById('upiHint').style.display = 'block'; }, 1200);
     });
 
